@@ -2,12 +2,13 @@
 
 ## Scope
 
-A standalone model created through the official Blender MCP in Blender 5.2.2 LTS. This step does not integrate the model into the landing page or add animation, bloom, UI controls, or a web fallback.
+A standalone model created through the official Blender MCP in Blender 5.2.2 LTS. The landing now loads an unchanged copy of this export through React Three Fiber and Drei. Web presentation transforms and animation do not modify the Blender source or exported geometry.
 
 ## Deliverables
 
 - `assets/ai-core.blend`: editable Blender source, model, preview lighting, camera, and dark world.
 - `assets/ai-core.glb`: self-contained glTF 2.0 binary containing only the model and its materials.
+- `public/models/ai-core.glb`: byte-identical web copy, served at `/models/ai-core.glb`.
 - `assets/ai-core-viewport.png`: screenshot of the rendered Blender viewport.
 
 All paths were resolved from the project root and passed to Blender as absolute paths.
@@ -61,10 +62,21 @@ The GLB uses meters and glTF's +Y-up convention. Only the selected `AI_Core` mes
 
 Round-trip validation used a temporary Blender scene, which was removed afterward. The original scene was restored and saved. The validator package and recovery checkpoints are outside the repository; no application dependencies were added.
 
+## Web integration
+
+The Canvas lives in `components/ai-core-scene.tsx`, a Client Component loaded dynamically by `components/ai-core-demo.tsx`. `useGLTF` loads `/models/ai-core.glb`; the shared cache is resolved before mounting the renderer so asset errors reach the DOM error boundary. A cloned scene receives presentation transforms in React; the source assets remain unchanged.
+
+The camera is at `[0, 0, 4.5]` with a 38-degree field of view. Ambient, hemisphere, and directional lights keep the setup lightweight; there is no postprocessing or external environment image. The model scales to fit narrow viewports.
+
+Idle rotation is 0.065 radians per second, with damped pointer tilt limited to about 2.6 degrees. Touch does not trigger pointer tilt. Reduced motion disables both, switches Canvas to demand rendering, and responds to live preference changes.
+
+The focusable `#demo` region includes an announced loading status. Unavailable WebGL, an asset error, or context loss switches it to an accessible static DOM/SVG illustration. The initial HTML also contains a static preview.
+
+Web verification covered Chromium at 1440 × 900 and 390 × 844, model loading, CTA/keyboard focus, loading state, initial/live reduced motion, unsupported WebGL, malformed GLB, and context loss. Normal sessions have no console errors or failed requests. The deliberately malformed GLB test generates an expected caught React diagnostic, not an uncaught page error. Application lint/build and automated axe-core checks passed. See the [README](../README.md) for the complete verification summary.
+
 ## Limitations and next-stage work
 
-- Preview area lights, camera, world, and AgX color management are not embedded in the GLB. Web integration must recreate suitable lighting and framing; an unlit viewer will not match the Blender screenshot.
+- Preview area lights, camera, world, and AgX color management are not embedded in the GLB. The web uses its own simple lighting and tone mapping, so it is not an exact match to the Blender screenshot.
 - The rings are mesh islands inside one object, not independently animated objects. They remain selectable through vertex groups in the Blender source.
-- Browser loading, desktop/mobile composition at 390 px, keyboard access, reduced motion, and the WebGL fallback are not tested in this modeling-only step.
-- No `public/models/ai-core.glb` copy is created until web integration.
-- Application lint/build checks are not applicable yet: the repository does not contain a Next.js application or `package.json`.
+- Additional effects and an accessible pause/resume control are intentionally deferred.
+- Browser tests used software WebGL. Safari, Firefox, real-device GPU performance, and screen-reader behavior remain unverified.
