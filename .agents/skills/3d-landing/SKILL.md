@@ -6,7 +6,7 @@ description: Use when building, changing or reviewing the ORBIT 3D landing in th
 # 3D Landing Workflow
 
 1. Read `AGENTS.md` and `docs/brief.md` from the project root. Keep documentation and page copy in English; communicate with the user in Ukrainian.
-2. Inspect the current project state and identify the current lesson or requested step. Stay within that scope rather than implementing later stages.
+2. Inspect the current project state and identify the current requested step. Stay within that scope rather than implementing later stages.
 3. Write a short plan before editing. For a planning-only request, return the plan without changing files.
 4. Before a large change, inspect Git status and establish a recoverable checkpoint for the relevant project files. Preserve unrelated user changes; do not reset or overwrite them.
 5. Build the smallest complete version for the current step first. Create the implementation from the project's requirements rather than copying the course's final code. Leave optional visual polish for later steps.

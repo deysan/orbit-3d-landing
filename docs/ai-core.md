@@ -1,0 +1,70 @@
+# ORBIT AI Core
+
+## Scope
+
+A standalone model created through the official Blender MCP in Blender 5.2.2 LTS. This step does not integrate the model into the landing page or add animation, bloom, UI controls, or a web fallback.
+
+## Deliverables
+
+- `assets/ai-core.blend`: editable Blender source, model, preview lighting, camera, and dark world.
+- `assets/ai-core.glb`: self-contained glTF 2.0 binary containing only the model and its materials.
+- `assets/ai-core-viewport.png`: screenshot of the rendered Blender viewport.
+
+All paths were resolved from the project root and passed to Blender as absolute paths.
+
+## Model
+
+`AI_Core` is one mesh with four disconnected, closed components. Named vertex groups retain access to each part:
+
+- `Core_Icosphere`: a flat-shaded, 80-triangle low-poly icosphere.
+- `Orbit_Outer_Teal`: open graphite band with cold teal inlays; 48-degree gap.
+- `Orbit_Middle_Teal`: open graphite band with cold teal inlays; 54-degree gap.
+- `Orbit_Inner_Violet`: smaller open graphite band with restrained violet inlays; 44-degree gap.
+
+The bands have different inclinations, radii, and gap positions. Their bevelled cross-sections are closed at both ends. End caps use explicit nondegenerate faces, and the final mesh is fully triangulated for stable export.
+
+The bounding box is approximately **1.994525 × 1.995946 × 2.000000 meters** in Blender coordinates. A rigid rotation and uniform scaling balanced the overall dimensions without stretching the core. The bounding-box center and object origin are `(0, 0, 0)`. Location and rotation are zero, scale is one, and no modifiers remain.
+
+Materials use Principled BSDF with constant PBR values: `Graphite Metal`, `Graphite Edge`, `Cold Teal`, and `Muted Violet`. No image textures, external assets, linked libraries, simulations, or text geometry are used. Accent emission is subtle; no bloom or postprocessing is configured.
+
+## Blender-only studio
+
+The `Studio - Not Exported` collection contains:
+
+- `Key_Softbox`: broad, soft main light.
+- `Rim_Cold_Teal`: cool rim light.
+- `Fill_Soft`: soft fill light.
+- `Rim_Violet_Subtle`: restrained violet rim light.
+- `Preview_Camera`: orthographic presentation camera.
+
+The world is `Dark Graphite Environment`.
+
+## Export and verification
+
+The GLB uses meters and glTF's +Y-up convention. Only the selected `AI_Core` mesh was exported, with materials and normals. Cameras, lights, animation, UVs, textures, and compression extensions are excluded.
+
+| Check | Result |
+| --- | --- |
+| Final exported triangles | 8,204 / 40,000 maximum |
+| GLB size | 255,832 bytes; approximately 249.84 KiB / 5,000,000 bytes maximum |
+| Mesh nodes | 1 |
+| Material primitives / expected draw calls | 4 |
+| Exported vertices including normal/material splits | 8,455 |
+| Non-manifold source edges | 0 |
+| Degenerate exported triangles | 0 |
+| Loose source vertices | 0 |
+| Khronos glTF Validator 2.0.0-dev.3.10 | 0 errors, 0 warnings, 0 infos, 0 hints |
+| Independent binary/accessor/index/normal checks | Passed |
+| Blender GLB round-trip | One mesh, four materials, 8,204 triangles, matching dimensions and identity transform |
+| Missing external files | None |
+| Viewport review | Core, three open bands, teal/violet accents, and dark background are visible |
+
+Round-trip validation used a temporary Blender scene, which was removed afterward. The original scene was restored and saved. The validator package and recovery checkpoints are outside the repository; no application dependencies were added.
+
+## Limitations and next-stage work
+
+- Preview area lights, camera, world, and AgX color management are not embedded in the GLB. Web integration must recreate suitable lighting and framing; an unlit viewer will not match the Blender screenshot.
+- The rings are mesh islands inside one object, not independently animated objects. They remain selectable through vertex groups in the Blender source.
+- Browser loading, desktop/mobile composition at 390 px, keyboard access, reduced motion, and the WebGL fallback are not tested in this modeling-only step.
+- No `public/models/ai-core.glb` copy is created until web integration.
+- Application lint/build checks are not applicable yet: the repository does not contain a Next.js application or `package.json`.
