@@ -68,7 +68,7 @@ The Canvas lives in `components/ai-core-scene.tsx`, a Client Component loaded dy
 
 The camera is at `[0, 0, 4.5]` with a 38-degree field of view. Ambient, hemisphere, and directional lights keep the setup lightweight; there is no postprocessing or external environment image. The model scales to fit narrow viewports.
 
-Idle rotation is 0.065 radians per second, with damped pointer tilt limited to about 2.6 degrees. Touch does not trigger pointer tilt. Reduced motion disables both, switches Canvas to demand rendering, and responds to live preference changes.
+Idle rotation is 0.08 radians per second. Pointer tilt is limited to 0.16 radians horizontally (about 9.2 degrees) and 0.12 radians vertically (about 6.9 degrees). Exponential damping uses a rate of 8 per second for a responsive but smooth reaction and return when the pointer leaves the stage. Touch does not trigger pointer tilt. Reduced motion disables both, switches Canvas to demand rendering, and responds to live preference changes.
 
 The focusable `#demo` region includes an announced loading status. Unavailable WebGL, an asset error, or context loss switches it to an accessible static DOM/SVG illustration. The initial HTML also contains a static preview.
 

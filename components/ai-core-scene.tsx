@@ -14,6 +14,10 @@ type SceneProps = {
 };
 
 const MODEL_PATH = "/models/ai-core.glb";
+const IDLE_SPEED = 0.08;
+const POINTER_TILT_X = 0.12;
+const POINTER_TILT_Y = 0.16;
+const POINTER_DAMPING = 8;
 
 // Match the Blender presentation orientation without moving the web camera off +Z.
 const presentationQuaternion: [number, number, number, number] = [
@@ -33,9 +37,9 @@ function CoreModel({ reducedMotion, pointer, onReady }: Omit<SceneProps, "onUnav
   useFrame((_, delta) => {
     if (reducedMotion || !motion.current) return;
     const step = Math.min(delta, 0.05);
-    idleAngle.current += step * 0.065;
-    motion.current.rotation.x = MathUtils.damp(motion.current.rotation.x, pointer.current.y * 0.035, 4, step);
-    motion.current.rotation.y = MathUtils.damp(motion.current.rotation.y, idleAngle.current + pointer.current.x * 0.045, 4, step);
+    idleAngle.current += step * IDLE_SPEED;
+    motion.current.rotation.x = MathUtils.damp(motion.current.rotation.x, pointer.current.y * POINTER_TILT_X, POINTER_DAMPING, step);
+    motion.current.rotation.y = MathUtils.damp(motion.current.rotation.y, idleAngle.current + pointer.current.x * POINTER_TILT_Y, POINTER_DAMPING, step);
   });
 
   return (
