@@ -2,13 +2,15 @@
 
 A presentation-only 3D landing project for a fictional workspace where small teams organize, run, and review AI workflows.
 
+Built as a hands-on experiment with Pi and Blender MCP, ORBIT explores AI-assisted development with repository instructions, reusable skills, and review/fix prompts. The 3D asset was created in Blender and integrated into a Next.js application using React Three Fiber.
+
 ## Current state
 
 A minimal, complete one-page landing is implemented at the project root with Next.js App Router. It includes the hero, three capabilities, workflow, final CTA, and the interactive AI Core. All primary CTAs lead to the on-page `#demo` region. There is no working AI backend or account system.
 
 ## Run locally
 
-Use Node.js 20.9 or newer and npm:
+Use Node.js 22 or newer and npm 10.5.1 or newer:
 
 ```bash
 npm ci
@@ -25,11 +27,9 @@ npm start
 
 The application lives at the repository root; `app/` is the App Router directory. `next/font/google` downloads Unbounded, Onest, and JetBrains Mono during development/build and serves them locally to visitors. The initial font download requires network access.
 
-## Inspiration and customizations
+## Project highlights
 
-The project is inspired by a course workflow for building a 3D landing with AI-assisted development and Blender MCP. It follows an incremental process rather than copying the course's final implementation.
-
-ORBIT's customizations include:
+ORBIT includes:
 
 - An original fictional product concept centered on shared context, connected tools, and review checkpoints.
 - English product copy and a dark graphite palette with cold teal and restrained violet accents.
